@@ -16,8 +16,6 @@
 package de.mediait.batch;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy;
@@ -36,25 +34,25 @@ public class FixingCsvRecordSeparatorPolicy extends
 
 	private char quoteCharacter = DEFAULT_QUOTE_CHARACTER;
 
-	public void setDelimiter(char delimiter) {
+	public void setDelimiter(final char delimiter) {
 		this.delimiter = delimiter;
 	}
 
-	public void setQuoteCharacter(char quoteCharacter) {
+	public void setQuoteCharacter(final char quoteCharacter) {
 		this.quoteCharacter = quoteCharacter;
 	}
 	
 	@Override
-	public boolean isEndOfRecord(String line) {
+	public boolean isEndOfRecord(final String line) {
 		return !isQuoteUnterminated(line);
 	}
 
-	private boolean isQuoteUnterminated(String line) {
+	private boolean isQuoteUnterminated(final String line) {
 		return StringUtils.countOccurrencesOf(fixQuoteCharactersInsideFields(line), String.valueOf(quoteCharacter)) % 2 != 0;
 	}
 
     @Override
-	public String preProcess(String line) {
+	public String preProcess(final String line) {
 		if (isQuoteUnterminated(line)) {
 			return fixQuoteCharactersInsideFields(line) + "\n";
 		}
@@ -66,6 +64,13 @@ public class FixingCsvRecordSeparatorPolicy extends
     	return fixQuoteCharactersInsideFields(line, delimiter, quoteCharacter);
     }
     
+    
+    /**
+     * 
+     * Only quotes surrounding the full
+     * string (i.e. preceded or followed by the FIELD-Delimiter) should be viewed as
+     * ESCAPING-Quotes, everything else should be considered as an ordinary string.
+     */
     public static String fixQuoteCharactersInsideFields(final String line, final char seperatorCharacter, final char quoteCharacter) {
 		if( line == null ) {
 			return null;
@@ -97,11 +102,6 @@ public class FixingCsvRecordSeparatorPolicy extends
 				continue; // if neighbour is a seperator, treat the quote as field quote
 			}
 			indizesUnquoted.add(i);
-		}
-		
-		if( quoteCount % 2 != 0 ) {
-//			System.out.println(""+quoteCount+" "+line);
-//			indizesUnquoted.add(line.lastIndexOf(quoteCharacter));
 		}
 		
 		final StringBuffer out = new StringBuffer();

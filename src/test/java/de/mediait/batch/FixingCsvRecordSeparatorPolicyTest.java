@@ -98,13 +98,9 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    
     /**
      * see https://bugs.freedesktop.org/show_bug.cgi?id=48621
-     * and https://bz.apache.org/ooo/show_bug.cgi?id=78926
      */
     @Test
     public void magicQuoteHandling() throws Exception {
-//    Only quotes surrounding the full
-//    string (i.e. preceded or followed by the FIELD-Delimiter) should be viewed as
-//    ESCAPING-Quotes, everything else should be considered as an ordinary string.
     	assertEquals(";'abc'' d ''ef';", fixLineSemikolon(";'abc' d 'ef';"));
     	assertEquals(",\"abc\"\" d \"\"ef\",", fixLineComma(",\"abc\" d \"ef\","));
     	

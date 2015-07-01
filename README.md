@@ -1,7 +1,11 @@
 # spring-batch-extensions for CSV file format
 
-Spring Batch extension which contains a `Separator Policy` implementation, that provides compensation for common `Comma Separated Values (CSV)` errors like missing `escape or quote characters`.
+Spring Batch extension provides compensation for common `Comma Separated Values (CSV)` errors like missing `escape or quote characters`. The compensation rules do roughly follow the ideas of `Libre Office` module.
 
+Implementation can be used for
+
+     * Spring Batch 3
+     * Java 5
 
 ## Example
 
@@ -22,5 +26,12 @@ Inject the `Separator Policy` implementation into `FlatFileItemReader` using the
         </property>
         ...
     </bean>
-        
+
+
+## Problem discussion
+
+A more detailed discussion about specific cases and the implementation used for `Libre Office`
+can be found here:
+
+     * https://bugs.freedesktop.org/show_bug.cgi?id=48621
 
