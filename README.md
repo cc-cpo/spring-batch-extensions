@@ -16,6 +16,8 @@ Implementation can be used for
 
 For a more complete list of test cases, please refer to unit tests in `FixingCsvRecordSeparatorPolicyTest`.
 
+A more detailed discussion about specific cases and the implementation used for `Libre Office`
+can be found on [bugs.freedesktop.org][1].
 
 ## Usage
 
@@ -30,10 +32,6 @@ Inject the `Separator Policy` implementation into `FlatFileItemReader` using the
     </bean>
 
 
-## Problem discussion
-
-A more detailed discussion about specific cases and the implementation used for `Libre Office`
-can be found on [bugs.freedesktop.org][1].
 
 
 [1]: https://bugs.freedesktop.org/show_bug.cgi?id=48621
