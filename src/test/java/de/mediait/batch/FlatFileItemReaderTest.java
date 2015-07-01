@@ -18,29 +18,31 @@ public class FlatFileItemReaderTest {
 	@Test
 	public void testFlatFileReader() throws Exception {
 		
-		FlatFileItemReader<String[]> reader = createFlatFileReader();
+		final FlatFileItemReader<String[]> reader = createFlatFileReader();
 		
 		reader.setResource(new ClassPathResource("csv-fix-samples/linetofix.txt"));
 		
-		ExecutionContext executionContext = new ExecutionContext();
+		final ExecutionContext executionContext = new ExecutionContext();
 		reader.open(executionContext);
-		String[] object = (String[]) reader.read();
+		final String[] object = (String[]) reader.read();
 		reader.close();
 
 
-		assertArrayEquals(new String[]{"begin","'abc' d 'ef'","end"}, object);
+		assertArrayEquals(new String[]{"begin","abc' \"d\" 'ef","end"}, object);
 	}
 
 	
 	private FlatFileItemReader<String[]> createFlatFileReader() {
-		FlatFileItemReader<String[]> reader = new FlatFileItemReader<String[]>();
-		DefaultLineMapper<String[]> lineMapper = new DefaultLineMapper<String[]>();
-		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(";");
+		final FlatFileItemReader<String[]> reader = new FlatFileItemReader<String[]>();
+		final DefaultLineMapper<String[]> lineMapper = new DefaultLineMapper<String[]>();
+		final DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(";");
+		tokenizer.setQuoteCharacter('\'');
 		lineMapper.setLineTokenizer(tokenizer);
-		RecordSeparatorPolicy recordSeparatorPolicy = new FixingCsvRecordSeparatorPolicy();
+		final FixingCsvRecordSeparatorPolicy recordSeparatorPolicy = new FixingCsvRecordSeparatorPolicy();
+		recordSeparatorPolicy.setQuoteCharacter('\'');
 		reader.setRecordSeparatorPolicy(recordSeparatorPolicy);
 		reader.setLineMapper(lineMapper);
-		FieldSetMapper<String[]> fieldSetMapper = new ArrayFieldSetMapper();
+		final FieldSetMapper<String[]> fieldSetMapper = new ArrayFieldSetMapper();
 		lineMapper.setFieldSetMapper(fieldSetMapper);
 		return reader;
 	}

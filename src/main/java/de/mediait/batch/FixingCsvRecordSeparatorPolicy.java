@@ -29,13 +29,29 @@ public class FixingCsvRecordSeparatorPolicy extends
 		SimpleRecordSeparatorPolicy {
 
 	
+	public static final String DELIMITER_COMMA = ",";
+
+	public static final char DEFAULT_QUOTE_CHARACTER = '"';
+
+	private char delimiter;
+
+	private char quoteCharacter = DEFAULT_QUOTE_CHARACTER;
+
+	public void setDelimiter(char delimiter) {
+		this.delimiter = delimiter;
+	}
+
+	public void setQuoteCharacter(char quoteCharacter) {
+		this.quoteCharacter = quoteCharacter;
+	}
+	
 	@Override
 	public boolean isEndOfRecord(String line) {
 		return !isQuoteUnterminated(line);
 	}
 
 	private boolean isQuoteUnterminated(String line) {
-		return StringUtils.countOccurrencesOf(fixQuoteCharactersInsideFields(line), "'") % 2 != 0;
+		return StringUtils.countOccurrencesOf(fixQuoteCharactersInsideFields(line), String.valueOf(quoteCharacter)) % 2 != 0;
 	}
 
     @Override
@@ -47,9 +63,8 @@ public class FixingCsvRecordSeparatorPolicy extends
     }
 
     
-    @Deprecated
-    public static String fixQuoteCharactersInsideFields(final String line) {
-    	return fixQuoteCharactersInsideFields(line, ';', '\'');
+    private String fixQuoteCharactersInsideFields(final String line) {
+    	return fixQuoteCharactersInsideFields(line, delimiter, quoteCharacter);
     }
     
     public static String fixQuoteCharactersInsideFields(final String line, final char seperatorCharacter, final char quoteCharacter) {
@@ -102,35 +117,4 @@ public class FixingCsvRecordSeparatorPolicy extends
 		return out.toString();
     }
     
-    @Deprecated
-	// implementation idea: blank out any "';'" as well as the first and last quote char in line. search for remaining quote chars and expand them
-	public static String fixQuoteCharactersInsideFieldsStefan(final String line) {
-		if( line == null ) {
-			return null;
-		}
-		final String masked = line.replace("';'", "___").replaceFirst("^'", "_").replaceFirst("'$", "_");
-		
-		final List<Integer> indizes = new LinkedList<Integer>();
-
-		int indexFrom = 0;
-		while(true) {
-			int match = masked.indexOf('\'', indexFrom);
-			if( match == -1) {
-				break;
-			}
-			indizes.add(match);
-			indexFrom = match+1;
-		}
-		
-		final StringBuffer out = new StringBuffer();
-		for(int i=0;i<line.length();i++) {
-			if( indizes.contains(i) ) {
-				out.append("'");
-			}
-			out.append(line.charAt(i));
-		}
-		
-		
-		return out.toString();
-	}
 }
