@@ -5,8 +5,8 @@ The compensation rules do roughly follow the ideas of `Libre Office` module.
 
 Implementation can be used for
 
-     * Spring Batch 3
-     * Java 5
+- `Spring Batch 3`
+- `Java 5`
 
 ## Example
 
@@ -19,7 +19,7 @@ For a more complete list of test cases, please refer to unit tests in `FixingCsv
 
 ## Usage
 
-Inject the `Separator Policy` implementation into `FlatFileItemReader` using the setter `setRecordSeparatorPolicy`.
+Inject the `Separator Policy` implementation into `FlatFileItemReader` using the setter `setRecordSeparatorPolicy`. See [Spring Batch Java Doc][2] for details.
 
     <bean class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="recordSeparatorPolicy">
@@ -33,7 +33,8 @@ Inject the `Separator Policy` implementation into `FlatFileItemReader` using the
 ## Problem discussion
 
 A more detailed discussion about specific cases and the implementation used for `Libre Office`
-can be found here:
+can be found on [bugs.freedesktop.org][1].
 
-     * https://bugs.freedesktop.org/show_bug.cgi?id=48621
 
+[1]: https://bugs.freedesktop.org/show_bug.cgi?id=48621
+[2]: http://docs.spring.io/spring-batch/trunk/apidocs/org/springframework/batch/item/file/separator/RecordSeparatorPolicy.html
