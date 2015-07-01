@@ -11,7 +11,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	 @Test
 	    public void quoteInsideString() throws Exception {
 
-	    	assertEquals("'before';'Hawai''i - Teil 2 / CH-Version';'after'", fixLine("'before';'Hawai'i - Teil 2 / CH-Version';'after'"));
+	    	assertEquals("'before';'Hawai''i - Teil 2 / CH-Version';'after'", fixLineSemikolon("'before';'Hawai'i - Teil 2 / CH-Version';'after'"));
 	    	
 //	    	tok.tokenize("'before';'Hawai'i - Teil 2 / CH-Version';'after'");
 //	    	Mockito.verify(mock).tokenize("'before';'Hawai''i - Teil 2 / CH-Version';'after'");
@@ -21,7 +21,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    @Test
 	    public void endsWithQuote() throws Exception {
 	    	
-	    	assertEquals("'ends'''", fixLine("'ends''"));
+	    	assertEquals("'ends'''", fixLineSemikolon("'ends''"));
 //	    	Mockito.verify(mock).tokenize("'ends'''");
 	    	
 	    }
@@ -29,14 +29,14 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    @Test
 	    public void quoteAndSemicolon() throws Exception {
 	    	
-	    	assertEquals("'tick';tack'", fixLine("'tick';tack'"));
+	    	assertEquals("'tick';tack'", fixLineSemikolon("'tick';tack'"));
 	    	// note: the openoffice returns: tick;'tack'''
 	    	
 	    }
 	    
 	    @Test
 	    public void lastColumn() throws Exception {
-	    	assertEquals("'some data';'last''column'", fixLine("'some data';'last'column'"));
+	    	assertEquals("'some data';'last''column'", fixLineSemikolon("'some data';'last'column'"));
 //	    	tok.tokenize("'some data';'last'column'");
 //	    	Mockito.verify(mock).tokenize("'some data';'last''column'");
 	        
@@ -44,7 +44,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
 
 	    @Test
 	    public void blank() throws Exception {
-	    	assertEquals("", fixLine(""));
+	    	assertEquals("", fixLineSemikolon(""));
 //	    	tok.tokenize("");
 //	    	Mockito.verify(mock).tokenize("");
 	        
@@ -52,7 +52,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    
 	    @Test
 	    public void empty() throws Exception {
-	    	assertEquals("''", fixLine("''"));
+	    	assertEquals("''", fixLineSemikolon("''"));
 //	    	tok.tokenize("''");
 //	    	Mockito.verify(mock).tokenize("''");
 	        
@@ -61,13 +61,13 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    
 	    @Test
 	    public void nullCall() throws Exception {
-	    	assertEquals(null, fixLine(null));
+	    	assertEquals(null, fixLineSemikolon(null));
 	        
 	    }
 
 	    @Test
 	    public void correct() throws Exception {
-	    	assertEquals("'foo';'bar'", fixLine("'foo';'bar'"));
+	    	assertEquals("'foo';'bar'", fixLineSemikolon("'foo';'bar'"));
 	        
 	    }
 	    
@@ -75,7 +75,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
 	    public void ralfUdo() throws Exception {
 	    	
 	    	// user 10560 from User_liste_2013_12_01_06_45_36.csv
-	    	assertEquals("'Hindenburgstr. ';'Postfach 5\n71145 Bondorf'", fixLine("'Hindenburgstr. ';'Postfach 5\n71145 Bondorf'"));
+	    	assertEquals("'Hindenburgstr. ';'Postfach 5\n71145 Bondorf'", fixLineSemikolon("'Hindenburgstr. ';'Postfach 5\n71145 Bondorf'"));
 	    	
 	    }
 	    
@@ -90,14 +90,20 @@ public class FixingCsvRecordSeparatorPolicyTest {
 //    Only quotes surrounding the full
 //    string (i.e. preceded or followed by the FIELD-Delimiter) should be viewed as
 //    ESCAPING-Quotes, everything else should be considered as an ordinary string.
-    	assertEquals(";'abc'' d ''ef';", fixLine(";'abc' d 'ef';"));
+    	assertEquals(";'abc'' d ''ef';", fixLineSemikolon(";'abc' d 'ef';"));
+    	assertEquals(",\"abc\"\" d \"\"ef\",", fixLineComma(",\"abc\" d \"ef\","));
     	
-    	assertEquals(";'a''b; ''a';", fixLine(";'a'b; 'a';"));
+    	assertEquals(";'a''b; ''a';", fixLineSemikolon(";'a'b; 'a';"));
+    	assertEquals(",\"abc\"\" d \"\"ef\",", fixLineComma(",\"abc\" d \"ef\","));
     }
 	
 	
-	private static String fixLine(final String line) {
+	private static String fixLineSemikolon(final String line) {
     	return FixingCsvRecordSeparatorPolicy.fixQuoteCharactersInsideFields(line,';','\'');
+    }
+	
+	private static String fixLineComma(final String line) {
+    	return FixingCsvRecordSeparatorPolicy.fixQuoteCharactersInsideFields(line,',','"');
     }
 
 }
