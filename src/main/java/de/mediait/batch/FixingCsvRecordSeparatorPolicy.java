@@ -22,8 +22,7 @@ import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy
 import org.springframework.util.StringUtils;
 
 
-public class FixingCsvRecordSeparatorPolicy extends
-		SimpleRecordSeparatorPolicy {
+public class FixingCsvRecordSeparatorPolicy extends SimpleRecordSeparatorPolicy {
 
 	
 	public static final String DELIMITER_COMMA = ",";
