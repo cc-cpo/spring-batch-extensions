@@ -10,14 +10,29 @@ import org.springframework.batch.item.file.separator.RecordSeparatorPolicy;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.core.io.ClassPathResource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 public class FlatFileItemReaderTest {
 
+	
 	@Test
-	public void testName() throws Exception {
+	public void testFlatFileReader() throws Exception {
 		
+		FlatFileItemReader<String[]> reader = createFlatFileReader();
 		
+		reader.setResource(new ClassPathResource("csv-fix-samples/linetofix.txt"));
+		
+		ExecutionContext executionContext = new ExecutionContext();
+		reader.open(executionContext);
+		String[] object = (String[]) reader.read();
+		reader.close();
+
+
+		assertArrayEquals(new String[]{"begin","'abc' d 'ef'","end"}, object);
+	}
+
+	
+	private FlatFileItemReader<String[]> createFlatFileReader() {
 		FlatFileItemReader<String[]> reader = new FlatFileItemReader<String[]>();
 		DefaultLineMapper<String[]> lineMapper = new DefaultLineMapper<String[]>();
 		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(";");
@@ -27,16 +42,7 @@ public class FlatFileItemReaderTest {
 		reader.setLineMapper(lineMapper);
 		FieldSetMapper<String[]> fieldSetMapper = new ArrayFieldSetMapper();
 		lineMapper.setFieldSetMapper(fieldSetMapper);
-		
-		reader.setResource(new ClassPathResource("foo.txt"));
-		
-		ExecutionContext executionContext = new ExecutionContext();
-		reader.open(executionContext);
-		String[] object = (String[]) reader.read();
-		reader.close();
-
-
-		assertEquals("'abc' d 'ef'", object[1]);
+		return reader;
 	}
 	
 }
