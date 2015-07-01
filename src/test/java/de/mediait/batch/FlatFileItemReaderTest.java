@@ -34,7 +34,7 @@ public class FlatFileItemReaderTest {
 		
 		final FlatFileItemReader<String[]> reader = createFlatFileReader(';','\'');
 		
-		reader.setResource(new ClassPathResource("csv-fix-samples/linetofix.txt"));
+		reader.setResource(new ClassPathResource("csv-fix-samples/fixsemicolon.txt"));
 		
 		final ExecutionContext executionContext = new ExecutionContext();
 		reader.open(executionContext);
@@ -51,7 +51,7 @@ public class FlatFileItemReaderTest {
 		
 		final FlatFileItemReader<String[]> reader = createFlatFileReader(',','\'');
 		
-		reader.setResource(new ClassPathResource("csv-fix-samples/linetofix2.txt"));
+		reader.setResource(new ClassPathResource("csv-fix-samples/fixcomma.txt"));
 		
 		final ExecutionContext executionContext = new ExecutionContext();
 		reader.open(executionContext);

@@ -1,6 +1,7 @@
 # spring-batch-extensions for CSV file format
 
-Spring Batch extension provides compensation for common `Comma Separated Values (CSV)` errors like missing `escape or quote characters`. The compensation rules do roughly follow the ideas of `Libre Office` module.
+Spring Batch extension provides compensation for some `Comma Separated Values (CSV)` errors like missing `escape and/or quote characters`.
+The compensation rules do roughly follow the ideas of `Libre Office` module.
 
 Implementation can be used for
 
@@ -13,6 +14,7 @@ Implementation can be used for
     =>
     "begin;'abc'' d ''ef';end"
 
+For a more complete list of test cases, please refer to unit tests in `FixingCsvRecordSeparatorPolicyTest`.
 
 
 ## Usage
