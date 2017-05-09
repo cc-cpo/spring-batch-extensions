@@ -1,5 +1,8 @@
 # spring-batch-extensions for CSV file format
 
+#[![Build Status](https://travis-ci.org/cc-cpo/spring-batch-extensions.svg)](https://travis-ci.org/cc-cpo/spring-batch-extensions)
+
+
 Spring Batch extension provides compensation for some `Comma Separated Values (CSV)` errors like missing `escape and/or quote characters`.
 The compensation rules do roughly follow the ideas of `Libre Office` module.
 
