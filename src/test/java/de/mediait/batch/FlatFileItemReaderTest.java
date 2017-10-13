@@ -18,13 +18,17 @@ package de.mediait.batch;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.ParseException;
+import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.ArrayFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 
 public class FlatFileItemReaderTest {
@@ -34,12 +38,7 @@ public class FlatFileItemReaderTest {
 
         final FlatFileItemReader<String[]> reader = createFlatFileReader(';', '\'');
 
-        reader.setResource(new ClassPathResource("csv-fix-samples/fixsemicolon.txt"));
-
-        final ExecutionContext executionContext = new ExecutionContext();
-        reader.open(executionContext);
-        final String[] object = reader.read();
-        reader.close();
+        String[] object = parseCsv(reader, "begin;'abc' \"d\" 'ef';end");
 
         assertArrayEquals(new String[] {"begin", "abc' \"d\" 'ef", "end"}, object);
     }
@@ -49,16 +48,49 @@ public class FlatFileItemReaderTest {
 
         final FlatFileItemReader<String[]> reader = createFlatFileReader(',', '\'');
 
-        reader.setResource(new ClassPathResource("csv-fix-samples/fixcomma.txt"));
+        String[] object = parseCsv(reader, "begin,'abc' \"d\" 'ef',end");
+        
+        assertArrayEquals(new String[] {"begin", "abc' \"d\" 'ef", "end"}, object);
+    }
+    
+    @Test
+    public void testFlatFileReaderClasspath() throws Exception {
+
+        final FlatFileItemReader<String[]> reader = createFlatFileReader(',', '\'');
+
+        String[] object = parseCsvFromClasspathResource(reader, "fixcomma.txt");
+        
+        assertArrayEquals(new String[] {"begin", "abc' \"d\" 'ef", "end"}, object);
+    }
+    
+    private String[] parseCsv(
+            final FlatFileItemReader<String[]> reader,
+            String csvData) 
+                    throws UnexpectedInputException, ParseException, Exception {
+
+        reader.setResource(new ByteArrayResource(csvData.getBytes(StandardCharsets.UTF_8)));
 
         final ExecutionContext executionContext = new ExecutionContext();
         reader.open(executionContext);
         final String[] object = reader.read();
         reader.close();
-
-        assertArrayEquals(new String[] {"begin", "abc' \"d\" 'ef", "end"}, object);
+        return object;
     }
+    
+    private String[] parseCsvFromClasspathResource(
+            final FlatFileItemReader<String[]> reader,
+            String resourceName) 
+                    throws UnexpectedInputException, ParseException, Exception {
 
+        reader.setResource(new ClassPathResource("csv-fix-samples/" + resourceName));
+
+        final ExecutionContext executionContext = new ExecutionContext();
+        reader.open(executionContext);
+        final String[] object = reader.read();
+        reader.close();
+        return object;
+    }
+    
     private FlatFileItemReader<String[]> createFlatFileReader(final char seperatorCharacter,
         final char quoteCharacter) {
         final FlatFileItemReader<String[]> reader = new FlatFileItemReader<String[]>();
@@ -70,6 +102,7 @@ public class FlatFileItemReaderTest {
         final FixingCsvRecordSeparatorPolicy recordSeparatorPolicy =
             new FixingCsvRecordSeparatorPolicy();
         recordSeparatorPolicy.setQuoteCharacter(quoteCharacter);
+        recordSeparatorPolicy.setDelimiter(seperatorCharacter);
         reader.setRecordSeparatorPolicy(recordSeparatorPolicy);
         reader.setLineMapper(lineMapper);
         final FieldSetMapper<String[]> fieldSetMapper = new ArrayFieldSetMapper();

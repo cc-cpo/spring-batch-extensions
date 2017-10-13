@@ -57,7 +57,7 @@ public class FixingCsvRecordSeparatorPolicyTest {
     public void correct() throws Exception {
         assertEquals("'foo';'bar'", fixLineSemikolon("'foo';'bar'"));
     }
-
+    
     /**
      * See https://bugs.freedesktop.org/show_bug.cgi?id=48621.
      */

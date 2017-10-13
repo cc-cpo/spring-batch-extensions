@@ -24,11 +24,11 @@ import org.springframework.util.StringUtils;
 
 public class FixingCsvRecordSeparatorPolicy extends SimpleRecordSeparatorPolicy {
 
-    public static final String DELIMITER_COMMA = ",";
+    public static final char DELIMITER_COMMA = ',';
 
     public static final char DEFAULT_QUOTE_CHARACTER = '"';
 
-    private char delimiter;
+    private char delimiter = DELIMITER_COMMA;
 
     private char quoteCharacter = DEFAULT_QUOTE_CHARACTER;
 
